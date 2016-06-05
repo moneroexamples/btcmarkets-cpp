@@ -16,7 +16,7 @@ include_directories(
 set(SOURCE_FILES
         main.cpp)
 
-add_subdirectory(ext)
+add_subdirectory(cpr)
 
 include_directories(${CPR_INCLUDE_DIRS})
 include_directories(${BTCMEXT_INCLUDE_DIRS})

@@ -23,6 +23,8 @@ int main(int acc, const char* avv[])
 
     nlohmann::json j;
 
+    j = btc_market.order_book("BTC", "ETH");
+
 //    j = btc_market.order_history("AUD", "BTC", 10, 1);
 //    j = btc_market.trade_history("BTC", "ETH", 2, 10);
 //    j = btc_market.open_orders("BTC", "ETH", 2, 10);

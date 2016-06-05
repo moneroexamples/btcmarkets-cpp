@@ -8,6 +8,11 @@ The library uses header only [json](https://github.com/nlohmann/json) library
 and [cpr](https://github.com/whoshuu/cpr) library as a wraper for libcurl
 for making get and post requests to the btcmakrets api service.
 
+## Dependencies Ubuntu 16.04
+
+```bash
+```
+
 ## Compilation
 
 ```bash

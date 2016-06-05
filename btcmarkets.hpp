@@ -234,8 +234,15 @@ class BtcMarkets
 {
     string base_url {"https://api.btcmarkets.net"};
 
+    // available trading paris: instrument/currency
+    vector<string> trading_pairs {"BTC/AUD", "LTC/AUD", "ETH/AUD",
+                                  "LTC/BTC", "ETH/BTC", "DAO/BTC",
+                                  "DAO/ETH"};
+
     string api_key;
     string private_key;
+
+    // base64 decoded version of the private_key
     string decoded_private_key;
 
 public:
@@ -254,12 +261,14 @@ public:
                   uint64_t since = 0,
                   const string& path =  "/order/history") const
     {
-        json j {{"currency", currency},
-                {"instrument", instrument},
-                {"limit", limit},
-                {"since", since}};
+        if (!trading_pair_available(currency, instrument))
+            return json {};
 
-        string post_data = j.dump();
+        string post_data = "{" + json_pair("currency"   , currency, ",")
+                               + json_pair("instrument" , instrument, ",")
+                               + json_pair("limit"      , limit, ",")
+                               + json_pair("since"      , since)
+                               + "}";
 
         cpr::Response response = post_request(path, post_data);
 
@@ -308,6 +317,8 @@ public:
                        const string& order_type,
                        const string& client_request_id) const
     {
+        if (!trading_pair_available(currency, instrument))
+            return json {};
 
         // for some reason, order of json arguments is important! o.O
         // thus we need to manually construct the post_data json string
@@ -315,16 +326,14 @@ public:
         // as shown in API example:
         // https://github.com/BTCMarkets/API/wiki/Trading-API#create-an-order
 
-        string post_data = "{"  + json_pair("currency"       , currency, ",")
-                                + json_pair("instrument"     , instrument, ",")
-                                + json_pair("price"          , price, ",")
-                                + json_pair("volume"         , volume, ",")
-                                + json_pair("orderSide"      , order_side, ",")
-                                + json_pair("ordertype"      , order_type, ",")
-                                + json_pair("clientRequestId", client_request_id)
-                                + "}";
-
-        cout << post_data << endl;
+        string post_data = "{" + json_pair("currency"       , currency, ",")
+                               + json_pair("instrument"     , instrument, ",")
+                               + json_pair("price"          , price, ",")
+                               + json_pair("volume"         , volume, ",")
+                               + json_pair("orderSide"      , order_side, ",")
+                               + json_pair("ordertype"      , order_type, ",")
+                               + json_pair("clientRequestId", client_request_id)
+                               + "}";
 
         cpr::Response response = post_request("/order/create", post_data);
 
@@ -389,6 +398,9 @@ public:
                const string& instrument,
                const string& path_tmpl = "/market/{inst}/{curr}/orderbook") const
     {
+        if (!trading_pair_available(currency, instrument))
+            return json {};
+
         string path {path_tmpl};
 
         str_replace(path, string("{inst}"), instrument);
@@ -406,6 +418,9 @@ public:
     json
     tick(const string& currency, const string& instrument) const
     {
+        if (!trading_pair_available(currency, instrument))
+            return json {};
+
         return order_book(currency, instrument,
                           "/market/{inst}/{curr}/tick");
     }
@@ -414,6 +429,9 @@ public:
     json
     trades(const string& currency, const string& instrument) const
     {
+        if (!trading_pair_available(currency, instrument))
+            return json {};
+
         return order_book(currency, instrument,
                           "/market/{inst}/{curr}/trades");
     }
@@ -436,6 +454,8 @@ public:
     json
     order_detail(const vector<uint64_t>& order_id) const
     {
+        // only one variable here, so dont need to
+        // worry about order
         json j {{"orderIds", order_id}};
 
         string post_data = j.dump();
@@ -522,6 +542,32 @@ private:
         }
 
         return response;
+    }
+
+    bool
+    trading_pair_available(const string& currency,
+                           const string& instrument) const
+    {
+
+        string a_pair {instrument + "/" + currency};
+
+        bool pair_found = (find(begin(trading_pairs),
+                               end(trading_pairs), a_pair)
+                          != trading_pairs.end());
+
+        if (!pair_found)
+        {
+            cerr << "Trading pair " << a_pair
+                 << " is not available!" << endl;
+            cout << "Available instrument/currency trading paris are: " ;
+
+            for(auto p: trading_pairs)
+                cout << p << " ";
+
+            cout << endl;
+        }
+
+        return pair_found;
     }
 
     /**

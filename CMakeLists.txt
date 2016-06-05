@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(btcmarketmain)
+project(btcmarketexamples)
 
 set(CMAKE_CXX_FLAGS
         "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -14,7 +14,7 @@ include_directories(
         ${Boost_INCLUDE_DIRS})
 
 set(SOURCE_FILES
-        main.cpp)
+        examples.cpp)
 
 
 set(USE_SYSTEM_CURL 1)
@@ -22,10 +22,10 @@ add_subdirectory(cpr)
 
 include_directories(${CPR_INCLUDE_DIRS})
 
-add_executable(btcmarketmain
+add_executable(btcmarketexamples
         ${SOURCE_FILES})
 
-target_link_libraries(btcmarketmain
+target_link_libraries(btcmarketexamples
         crypto
         ${CPR_LIBRARIES}
         ${Boost_LIBRARIES}

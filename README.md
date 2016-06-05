@@ -4,6 +4,10 @@
 to their service in number of programming languages, except C++. To
 rectify this problem, this library was created.
 
+The library uses header only [json](https://github.com/nlohmann/json) library
+and [cpr](https://github.com/whoshuu/cpr) library as a wraper for libcurl
+for making get and post requests to the btcmakrets api service.
+
 ## Compilation
 
 ```bash

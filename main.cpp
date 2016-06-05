@@ -29,7 +29,7 @@ int main(int acc, const char* avv[])
 //    j = btc_market.create_order("BTC", "ETH", 0.02102020, 0.5, "Bid", "Limit");
 //    j = btc_market.create_order("BTC", "ETH", 0.02899998, 1.5, "Ask", "Limit");
 //    j = btc_market.cancel_order(102087449);
-    j = btc_market.order_book("AUD", "BTC");
+//    j = btc_market.order_book("AUD", "BTC");
 //    j = btc_market.tick("BTC", "ETH");
 //    j = btc_market.trades("BTC", "ETH");
 //    j = btc_market.order_detail(101549744);

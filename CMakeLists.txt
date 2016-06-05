@@ -16,15 +16,17 @@ include_directories(
 set(SOURCE_FILES
         main.cpp)
 
+
+set(USE_SYSTEM_CURL 1)
 add_subdirectory(cpr)
 
 include_directories(${CPR_INCLUDE_DIRS})
-include_directories(${BTCMEXT_INCLUDE_DIRS})
 
 add_executable(btcmarketmain
         ${SOURCE_FILES})
 
 target_link_libraries(btcmarketmain
-        ${BTCM_LIBRARY}
+        crypto
+        ${CPR_LIBRARIES}
         ${Boost_LIBRARIES}
         pthread)

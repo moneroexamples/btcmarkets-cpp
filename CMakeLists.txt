@@ -17,7 +17,7 @@ set(SOURCE_FILES
         examples.cpp)
 
 
-set(USE_SYSTEM_CURL 1)
+set(USE_SYSTEM_CURL ON CACHE INTERNAL "use system curl")
 add_subdirectory(cpr)
 
 include_directories(${CPR_INCLUDE_DIRS})

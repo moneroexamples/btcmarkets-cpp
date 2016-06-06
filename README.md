@@ -20,7 +20,7 @@ sudo apt install git build-essential cmake libboost-program-options-dev libcurl4
 ##### Arch Linux
 
 ```bash
-sudo pacman -Sy git base-devel cmake boost curl
+sudo pacman -Sy git base-devel cmake boost curl openssl
 ```
 
 ## Compilation

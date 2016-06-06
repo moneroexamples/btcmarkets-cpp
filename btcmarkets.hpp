@@ -247,6 +247,11 @@ class BtcMarkets
 
 public:
 
+
+    BtcMarkets() : api_key {}, private_key {}
+    {
+    }
+
     BtcMarkets(string _api_key, string _private_key)
         : api_key {_api_key}, private_key {_private_key}
     {

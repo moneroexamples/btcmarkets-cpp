@@ -18,13 +18,39 @@ int main(int acc, const char* avv[])
     if (!parse_options(acc, avv, options))
         return 1;
 
-    btcm::BtcMarkets btc_market {options["api_key"],
-                                 options["private_key"]};
+
+    bool keys_provided {false};
+
+    unique_ptr<btcm::BtcMarkets> btc_market;
+
+    if (!options["api_key"].empty() && !options["private_key"].empty())
+    {
+        btc_market = unique_ptr<btcm::BtcMarkets>(
+                              new  btcm::BtcMarkets {
+                                      options["api_key"],
+                                      options["private_key"]}
+        );
+
+        keys_provided = true;
+    }
+    else
+    {
+        btc_market = unique_ptr<btcm::BtcMarkets>(new  btcm::BtcMarkets);
+    }
+
+    btc_market ;
 
     nlohmann::json j;
 
-    j = btc_market.order_book("BTC", "ETH");
-
+    if (!keys_provided)
+    {
+        // for order_book and tick, api_key and private key are not required
+        //j = btc_market->order_book("BTC", "ETH");
+        j = btc_market->tick("BTC", "ETH");
+    }
+    else
+    {
+        // for these functions, api_key and private key are required
 //    j = btc_market.order_history("AUD", "BTC", 10, 1);
 //    j = btc_market.trade_history("BTC", "ETH", 2, 10);
 //    j = btc_market.open_orders("BTC", "ETH", 2, 10);
@@ -32,13 +58,12 @@ int main(int acc, const char* avv[])
 //    j = btc_market.create_order("BTC", "ETH", 0.02899998, 1.5, "Ask", "Limit");
 //    j = btc_market.cancel_order(102087449);
 //    j = btc_market.order_book("AUD", "BTC");
-//    j = btc_market.tick("BTC", "ETH");
 //    j = btc_market.trades("BTC", "ETH");
 //    j = btc_market.order_detail(101549744);
 //    j = btc_market.account_balance();
+    }
 
     cout << j.dump() << endl;
-
 
     cout << "End of program" << endl;
 
@@ -49,6 +74,10 @@ int main(int acc, const char* avv[])
 bool
 parse_options(int acc, const char *avv[], map<string, string>& options)
 {
+
+    options["api_key"]     = {};
+    options["private_key"] = {};
+
     po::options_description desc("btcmarketsmain - rest api test");
 
     desc.add_options()
@@ -75,11 +104,6 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
     {
         options["api_key"]     = vm["api-key"].as<string>();
         options["private_key"] = vm["private-key"].as<string>();
-    }
-    else
-    {
-        cerr << "api-key and/or private key not provided!." << endl;
-        return false;
     }
 
     return true;

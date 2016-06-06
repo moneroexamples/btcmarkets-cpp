@@ -5,13 +5,22 @@ to their service in number of programming languages, except C++. To
 rectify this problem, this library was created.
 
 The library uses header only [json](https://github.com/nlohmann/json) library
-and [cpr](https://github.com/whoshuu/cpr) library as a wraper for libcurl
+and [cpr](https://github.com/whoshuu/cpr) library as a wrapper for libcurl
 for making get and post requests to the btcmakrets api service.
 
-## Dependencies for Ubuntu 15.10 and 16.04
+## Dependencies 
+
+##### Ubuntu 15.10 and 16.04
 
 ```bash
 sudo apt install git build-essential cmake libboost-program-options-dev libcurl4-openssl-dev libssl-dev
+```
+
+
+##### Arch Linux
+
+```bash
+sudo pacman -Sy git base-devel cmake boost curl
 ```
 
 ## Compilation
@@ -26,12 +35,12 @@ cmake ..
 make
 ```
 
-After successful compilation, `btcmarketexamples` binary should be generated.
+After successful compilation, `btcmarketsexamples` binary should be generated.
 
-## `btcmarketexamples` options
+## `btcmarketsexamples` options
 
 ```bash
-btcmarketexamples - example program showcasing using BtcMarkets C++11 RESTful api:
+btcmarketsexamples - example program showcasing using BtcMarkets C++11 RESTful api:
   -h [ --help ]                      produce help message
   -a [ --api-key ] arg               btcmarkets api key
   -p [ --private-key ] arg           private key provided by btcmarkets to you
@@ -46,7 +55,6 @@ btcmarketexamples - example program showcasing using BtcMarkets C++11 RESTful ap
   --volume arg                       volume of the order
   --side arg (=bid)                  side of order: bid, ask
   --type arg (=limit)                type of the order: market, limit
-
 ```
 
 ## Examples

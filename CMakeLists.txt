@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(btcmarketexamples)
+project(btcmarketesxamples)
 
 set(CMAKE_CXX_FLAGS
         "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -22,10 +22,10 @@ add_subdirectory(cpr)
 
 include_directories(${CPR_INCLUDE_DIRS})
 
-add_executable(btcmarketexamples
+add_executable(btcmarketsexamples
         ${SOURCE_FILES})
 
-target_link_libraries(btcmarketexamples
+target_link_libraries(btcmarketsexamples
         crypto
         ${CPR_LIBRARIES}
         ${Boost_LIBRARIES}

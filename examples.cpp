@@ -87,7 +87,7 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
             ("private-key,p", po::value<string>(),
              "private key provided by btcmarkets to you")
             ("command,c", po::value<string>()->default_value("tick"),
-             "api command to execute: tick, order_book, order_history, trade_history"
+             "api command to execute: tick, order_book, order_history, trade_history, "
                      "open_orders, create_order, cancel_order, trades, "
                      "order_detail, account_balance")
             ("trade-pair,t", po::value<string>()->default_value("BTC/AUD"),

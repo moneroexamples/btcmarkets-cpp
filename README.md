@@ -8,9 +8,10 @@ The library uses header only [json](https://github.com/nlohmann/json) library
 and [cpr](https://github.com/whoshuu/cpr) library as a wraper for libcurl
 for making get and post requests to the btcmakrets api service.
 
-## Dependencies Ubuntu 16.04
+## Dependencies for Ubuntu 15.10 and 16.04
 
 ```bash
+sudo apt install git build-essential cmake libboost-program-options-dev libcurl4-openssl-dev libssl-dev
 ```
 
 ## Compilation

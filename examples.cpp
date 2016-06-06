@@ -18,6 +18,8 @@ int main(int acc, const char* avv[])
     if (!parse_options(acc, avv, options))
         return 1;
 
+    cout << nlohmann::json(options) << endl;
+
     bool keys_provided {false};
 
     unique_ptr<btcm::BtcMarkets> btc_market;
@@ -44,29 +46,66 @@ int main(int acc, const char* avv[])
     if (!keys_provided)
     {
         // for order_book and tick, api_key and private key are not required
-        //j = btc_market->order_book("BTC", "ETH");
-        j = btc_market->tick("BTC", "ETH");
+
+        if (options["command"] == "tick")
+        {
+            j = btc_market->tick(options["currency"],
+                                 options["instrument"]);
+        }
+
+        if (options["command"] == "order_book")
+        {
+            j = btc_market->order_book(options["currency"],
+                                       options["instrument"]);
+        }
+
     }
     else
     {
         // for these functions, api_key and private key are required
-//    j = btc_market.order_history("AUD", "BTC", 10, 1);
-//    j = btc_market.trade_history("BTC", "ETH", 2, 10);
-//    j = btc_market.open_orders("BTC", "ETH", 2, 10);
+
+        if (options["command"] == "order_history")
+        {
+            j = btc_market->order_history(options["currency"],
+                                          options["instrument"],
+                                          10, 1);
+        }
+
+        if (options["command"] == "trade_history")
+        {
+            j = btc_market->trade_history(options["currency"],
+                                          options["instrument"],
+                                          10, 1);
+        }
+
+        if (options["command"] == "open_orders")
+        {
+            j = btc_market->open_orders(options["currency"],
+                                          options["instrument"],
+                                          10, 1);
+        }
+
+        if (options["command"] == "trades")
+        {
+            j = btc_market->trades(options["currency"],
+                                   options["instrument"]);
+        }
+
 //    j = btc_market.create_order("BTC", "ETH", 0.02102020, 0.5, "Bid", "Limit");
 //    j = btc_market.create_order("BTC", "ETH", 0.02899998, 1.5, "Ask", "Limit");
 //    j = btc_market.cancel_order(102087449);
-//    j = btc_market.trades("BTC", "ETH");
+//
 //    j = btc_market.order_detail(101549744);
 //    j = btc_market.account_balance();
     }
 
-    cout << j.dump() << endl;
+    cout << j << endl;
 
     cout << "End of program" << endl;
 
     return 0;
 }
+
 
 
 bool
@@ -75,10 +114,28 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
 
     options["api_key"]     = {};
     options["private_key"] = {};
+    options["command"]     = {};
+    options["trade-pair"]  = {};
+    options["price"]       = {};
+    options["volume"]      = {};
+    options["side"]        = {};
+    options["type"]        = {};
+
+
+    set<string> available_commands {"tick", "order_book",
+                                    "order_history", "open_orders",
+                                    "create_order", "cancel_order",
+                                    "trades", "order_detail",
+                                    "account_balance", "trade_history"};
+
+    set<string> commands_requiring_auth {"order_history", "open_orders",
+                                         "create_order", "cancel_order",
+                                         "trades", "order_detail",
+                                         "account_balance", "trade_history"};
 
     po::options_description desc("btcmarketexamples - example program "
                                  "showcasing using BtcMarkets "
-                                 "C++11 RESTful api");
+                                 "C++11 RESTfull API");
 
     desc.add_options()
             ("help,h", "produce help message")
@@ -120,6 +177,48 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
         options["api_key"]     = vm["api-key"].as<string>();
         options["private_key"] = vm["private-key"].as<string>();
     }
+
+    options["command"] = vm["command"].as<string>();
+
+    // check if valid command
+    if (available_commands.find(options["command"]) == available_commands.end())
+    {
+        cerr <<"Command \"" + options["command"] + "\" not recognized! "
+               "Check help for available commands." << endl;
+        return false;
+    }
+
+    if (commands_requiring_auth.find(options["command"]) != commands_requiring_auth.end())
+    {
+        // check if we have private keys, as they are required for this function
+        if (!vm.count("api-key") || !vm.count("private-key"))
+        {
+            cerr << "api-key and/or private-key are not given!" << endl;
+            return false;
+        }
+    }
+
+
+    options["trade-pair"]  = vm["trade-pair"].as<string>();
+
+    // split trade-pair into instrument and currency
+    std::vector<std::string> elems;
+    std::stringstream ss(options["trade-pair"]);
+    std::string item;
+    while (std::getline(ss, item, '/'))
+        elems.push_back(item);
+
+    options["instrument"] = elems.at(0);
+    options["currency"]   = elems.at(1);
+
+    if (vm.count("price"))
+        options["price"]  = std::to_string(vm["price"].as<double>());
+
+    if (vm.count("volume") && vm.count("volume"))
+        options["volume"]  = std::to_string(vm["volume"].as<double>());
+
+    options["side"]  = vm["side"].as<string>();
+    options["type"]  = vm["type"].as<string>();
 
     return true;
 

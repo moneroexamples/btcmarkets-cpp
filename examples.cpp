@@ -63,21 +63,24 @@ int main(int acc, const char* avv[])
         {
             j = btc_market->order_history(options["currency"],
                                           options["instrument"],
-                                          10, 1);
+                                          stoull(options["limit"]),
+                                          stoull(options["since"]));
         }
 
         if (options["command"] == "trade_history")
         {
             j = btc_market->trade_history(options["currency"],
                                           options["instrument"],
-                                          10, 1);
+                                          stoull(options["limit"]),
+                                          stoull(options["since"]));
         }
 
         if (options["command"] == "open_orders")
         {
             j = btc_market->open_orders(options["currency"],
-                                          options["instrument"],
-                                          10, 1);
+                                        options["instrument"],
+                                        stoull(options["limit"]),
+                                        stoull(options["since"]));
         }
 
         if (options["command"] == "trades")
@@ -134,6 +137,8 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
     options["side"]        = {};
     options["order_id"]    = {};
     options["type"]        = {};
+    options["limit"]       = {};
+    options["since"]       = {};
 
 
     set<string> available_commands {"tick", "order_book",
@@ -172,6 +177,10 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
              "side of order: Bid, Ask")
             ("type", po::value<string>()->default_value("Limit"),
              "type of the order: Market, Limit")
+            ("limit", po::value<uint64_t>()->default_value(10),
+             "number of past orders to fetch")
+            ("since", po::value<uint64_t>()->default_value(0),
+             "from when to fetch the past orders.")
             ("order-id", po::value<uint64_t>(),
              "id number of an order to cancel or check details of");
 
@@ -235,6 +244,9 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
 
     options["side"]  = vm["side"].as<string>();
     options["type"]  = vm["type"].as<string>();
+
+    options["limit"]  = std::to_string(vm["limit"].as<uint64_t>());
+    options["since"]  = std::to_string(vm["limit"].as<uint64_t>());
 
     if (commands_requiring_auth.find(options["command"]) != commands_requiring_auth.end())
     {

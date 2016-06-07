@@ -151,10 +151,11 @@ An Ask and Limit (default) order to sell 1.5 ETH for 20.01 AUD.
 {"clientRequestId":"1","errorCode":null,"errorMessage":null,"id":102662870,"success":true}
 ```
 
-An Ask and Market order to buy 10 DAO using ETH.
+An Ask and Market order to sell 10 DAO using ETH.
 
 ```bash
 ./btcmarketsexamples -a your_api_key -p your_private_key -c create_order -t DAO/ETH --volume 10.0 --side Ask --type Market
 
 {"clientRequestId":"1","errorCode":null,"errorMessage":null,"id":102668298,"success":true}
 ```
+

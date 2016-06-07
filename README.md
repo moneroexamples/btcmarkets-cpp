@@ -8,6 +8,10 @@ The library uses header only [json](https://github.com/nlohmann/json) library
 and [cpr](https://github.com/whoshuu/cpr) library as a wrapper for libcurl
 for making get and post requests to the btcmakrets api service.
 
+For most commands, public `api_key` and secret `private_key` are required 
+for authentication for your account. The keys are provided to you by btcmarkets
+in your [Account/API key](https://btcmarkets.net/account/apikey) section.
+
 ### Dependencies 
 
 ##### Ubuntu 15.10 and 16.04
@@ -116,10 +120,6 @@ Also can limit number of recent trends, by providing trade id to start from.
 
 *Account balance (authentication required)*
 
-Public `api_key` and secret `private_key` are required for functions dealing
-with your account. The keys are provided to you by btcmarkets
-in your [Account/API key](https://btcmarkets.net/account/apikey) section.
-
 Values in the example output were replaced with dummy values for privacy reasons.
 
 ```bash
@@ -129,10 +129,6 @@ Values in the example output were replaced with dummy values for privacy reasons
 ```
 
 *Create order (authentication required)*
-
-Public `api_key` and secret `private_key` are required for functions dealing
-with your account. The keys are provided to you by btcmarkets
-in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 
 A Bid(default) and Limit (default) order to buy 1 ETH for 18.17 AUD.
 
@@ -160,10 +156,6 @@ An Ask and Market order to sell 10 DAO using ETH.
 
 *Cancel order (authentication required)*
 
-Public `api_key` and secret `private_key` are required for functions dealing
-with your account. The keys are provided to you by btcmarkets
-in your [Account/API key](https://btcmarkets.net/account/apikey) section.
-
 ```bash
 ./btcmarketsexamples -a public_api_key -p secret_private_key -c cancel_order --order-id 102662870
 
@@ -172,12 +164,54 @@ in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 
 *Order details (authentication required)*
 
-Public `api_key` and secret `private_key` are required for functions dealing
-with your account. The keys are provided to you by btcmarkets
-in your [Account/API key](https://btcmarkets.net/account/apikey) section.
-
 ```bash
 ./btcmarketsexamples -a public_api_key -p secret_private_key -c order_detail --order-id 102510625
 
 {"errorCode":null,"errorMessage":null,"orders":[{"clientRequestId":null,"creationTime":1465206394338,"currency":"BTC","errorMessage":null,"id":102510625,"instrument":"ETH","openVolume":100000000,"orderSide":"Bid","ordertype":"Limit","price":2241987,"status":"Placed","trades":[],"volume":100000000}],"success":true}
+```
+
+
+
+*Order history (authentication required)*
+
+Show last two orders of to buy ETH using AUD.
+
+```bash
+./btcmarketsexamples -a public_api_key -p secret_private_key -c order_history -t ETH/AUD --limit 2 
+
+{"errorCode":null,"errorMessage":null,"orders":[{"clientRequestId":null,"creationTime":1465287752319,"currency":"AUD","errorMessage":null,"id":102800357,"instrument":"ETH","openVolume":60000000,"orderSide":"Bid","ordertype":"Limit","price":1925000000,"status":"Cancelled","trades":[],"volume":60000000},{"clientRequestId":null,"creationTime":1465287783251,"currency":"AUD","errorMessage":null,"id":102800414,"instrument":"ETH","openVolume":200000000,"orderSide":"Bid","ordertype":"Limit","price":1926000000,"status":"Cancelled","trades":[],"volume":200000000}],"success":true}
+
+```
+
+
+*Open orders (authentication required)*
+
+Show last open orders of to buy ETH using BTC.
+
+```bash
+./btcmarketsexamples -a public_api_key -p secret_private_key -c order_history -t ETH/BTC --limit 1 
+
+{"errorCode":null,"errorMessage":null,"orders":[{"clientRequestId":null,"creationTime":1465289102761,"currency":"BTC","errorMessage":null,"id":102803735,"instrument":"ETH","openVolume":100000000,"orderSide":"Bid","ordertype":"Limit","price":2245882,"status":"Placed","trades":[],"volume":100000000}],"success":true}
+```
+
+
+*Trade hist (authentication required)*
+
+Show last trade to buy DAO using ETH.
+
+```bash
+./btcmarketsexamples -a public_api_key -p secret_private_key -c trade_history -t DAO/ETH --limit 1 
+
+{"errorCode":null,"errorMessage":null,"success":true,"trades":[{"creationTime":1465266880437,"description":null,"fee":2200000,"id":102669490,"price":1000000,"side":"Bid","volume":1000000000}]}[
+```
+
+
+
+## How can you help?
+
+Constructive criticism, code and website edits are always good. They can be made through github.
+
+Some Monero are also welcome:
+```
+48daf1rG3hE1Txapcsxh6WXNe9MLNKtu7W7tKTivtSoVLHErYzvdcpea2nSTgGkz66RFP4GKVAsTV14v6G3oddBTHfxP6tU
 ```

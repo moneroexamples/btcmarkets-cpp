@@ -18,8 +18,6 @@ int main(int acc, const char* avv[])
     if (!parse_options(acc, avv, options))
         return 1;
 
-    cout << nlohmann::json(options) << endl;
-
     bool keys_provided {false};
 
     unique_ptr<btcm::BtcMarkets> btc_market;
@@ -39,8 +37,6 @@ int main(int acc, const char* avv[])
         btc_market = unique_ptr<btcm::BtcMarkets>(new  btcm::BtcMarkets);
     }
 
-    btc_market ;
-
     nlohmann::json j;
 
     if (!keys_provided)
@@ -58,7 +54,6 @@ int main(int acc, const char* avv[])
             j = btc_market->order_book(options["currency"],
                                        options["instrument"]);
         }
-
     }
     else
     {
@@ -91,17 +86,35 @@ int main(int acc, const char* avv[])
                                    options["instrument"]);
         }
 
-//    j = btc_market.create_order("BTC", "ETH", 0.02102020, 0.5, "Bid", "Limit");
-//    j = btc_market.create_order("BTC", "ETH", 0.02899998, 1.5, "Ask", "Limit");
-//    j = btc_market.cancel_order(102087449);
-//
-//    j = btc_market.order_detail(101549744);
-//    j = btc_market.account_balance();
+        if (options["command"] == "account_balance")
+        {
+            j = btc_market->account_balance();
+        }
+
+        if (options["command"] == "create_order")
+        {
+            j = btc_market->create_order(options["currency"],
+                                         options["instrument"],
+                                         stod(options["price"]),
+                                         stod(options["volume"]),
+                                         options["side"],
+                                         options["type"]);
+        }
+
+        if (options["command"] == "cancel_order")
+        {
+            j = btc_market->cancel_order(stoull(options["order_id"]));
+        }
+
+
+        if (options["command"] == "order_detail")
+        {
+            j = btc_market->order_detail(stoull(options["order_id"]));
+        }
+
     }
 
     cout << j << endl;
-
-    cout << "End of program" << endl;
 
     return 0;
 }
@@ -119,6 +132,7 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
     options["price"]       = {};
     options["volume"]      = {};
     options["side"]        = {};
+    options["order_id"]    = {};
     options["type"]        = {};
 
 
@@ -154,10 +168,12 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
              "price when making an order")
             ("volume", po::value<double>(),
              "volume of the order")
-            ("side", po::value<string>()->default_value("bid"),
-             "side of order: bid, ask")
-            ("type", po::value<string>()->default_value("limit"),
-             "type of the order: market, limit");
+            ("side", po::value<string>()->default_value("Bid"),
+             "side of order: Bid, Ask")
+            ("type", po::value<string>()->default_value("Limit"),
+             "type of the order: Market, Limit")
+            ("order-id", po::value<uint64_t>(),
+             "id number of an order to cancel or check details of");
 
     po::variables_map vm;
     po::store(po::parse_command_line(acc, avv, desc), vm);
@@ -183,21 +199,18 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
     // check if valid command
     if (available_commands.find(options["command"]) == available_commands.end())
     {
-        cerr <<"Command \"" + options["command"] + "\" not recognized! "
-               "Check help for available commands." << endl;
+        cerr <<"Command \"" + options["command"] + "\" not recognized! " << endl;
+        cout << "Available commands: ";
+
+        stringstream av_commands;
+
+        for (auto& s: available_commands)
+            av_commands << s << ", ";
+
+        cout << av_commands.str().erase(av_commands.str().size() - 2) << endl;
+
         return false;
     }
-
-    if (commands_requiring_auth.find(options["command"]) != commands_requiring_auth.end())
-    {
-        // check if we have private keys, as they are required for this function
-        if (!vm.count("api-key") || !vm.count("private-key"))
-        {
-            cerr << "api-key and/or private-key are not given!" << endl;
-            return false;
-        }
-    }
-
 
     options["trade-pair"]  = vm["trade-pair"].as<string>();
 
@@ -214,11 +227,45 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
     if (vm.count("price"))
         options["price"]  = std::to_string(vm["price"].as<double>());
 
-    if (vm.count("volume") && vm.count("volume"))
+    if (vm.count("volume"))
         options["volume"]  = std::to_string(vm["volume"].as<double>());
+
+    if (vm.count("order-id"))
+        options["order_id"]  = std::to_string(vm["order-id"].as<uint64_t>());
 
     options["side"]  = vm["side"].as<string>();
     options["type"]  = vm["type"].as<string>();
+
+    if (commands_requiring_auth.find(options["command"]) != commands_requiring_auth.end())
+    {
+        // check if we have private keys, as they are required for this function
+        if (!vm.count("api-key") || !vm.count("private-key"))
+        {
+            cerr << "api-key and/or private-key are not given!" << endl;
+            return false;
+        }
+
+        if (options["command"] == "create_order")
+        {
+            if (!vm.count("price") || !vm.count("volume"))
+            {
+                cerr << "Cant make an order for " << options["trade-pair"]
+                     << ", side: " << options["side"] << ", type: " << options["type"]
+                     << ", because price and volume not given!" << endl;
+                return false;
+            }
+        }
+
+        if (options["command"] == "cancel_order")
+        {
+            if (!vm.count("order-id"))
+            {
+                cerr << "Cant cancel an order for  "
+                     <<  "because order-id not given!" << endl;
+                return false;
+            }
+        }
+    }
 
     return true;
 

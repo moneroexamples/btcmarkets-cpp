@@ -88,9 +88,9 @@ btcmarketexamples - example program showcasing using BtcMarkets C++11 RESTfull A
 
 *Account balance (authentication required)*
 
-Public `api_key` and secret `private_key` are required for functions regarding
-with your account. They keys are provided to you by btcmarkets
-at their [Account/API key](https://btcmarkets.net/account/apikey) section.
+Public `api_key` and secret `private_key` are required for functions dealing
+with your account. The keys are provided to you by btcmarkets
+in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 
 Values in the example output were replaced with dummy values for privacy reasons.
 

@@ -287,8 +287,6 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
             }
         }
 
-
-
         if (options["command"] == "cancel_order")
         {
             if (!vm.count("order-id"))

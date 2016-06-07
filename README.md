@@ -195,7 +195,7 @@ Show last open orders of to buy ETH using BTC.
 ```
 
 
-*Trade hist (authentication required)*
+*Trades history (authentication required)*
 
 Show last trade to buy DAO using ETH.
 

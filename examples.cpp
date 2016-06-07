@@ -260,14 +260,34 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
 
         if (options["command"] == "create_order")
         {
-            if (!vm.count("price") || !vm.count("volume"))
+            if (options["type"] == "Limit")
             {
-                cerr << "Cant make an order for " << options["trade-pair"]
-                     << ", side: " << options["side"] << ", type: " << options["type"]
-                     << ", because price and volume not given!" << endl;
-                return false;
+                if (!vm.count("price") || !vm.count("volume"))
+                {
+                    cerr << "Cant make a Limit order for " << options["trade-pair"]
+                    << ", side: " << options["side"] << ", type: " << options["type"]
+                    << ", because price and volume not given!" << endl;
+                    return false;
+                }
+
+            }
+            else if (options["type"] == "Market")
+            {
+                if (!vm.count("volume"))
+                {
+                    cerr << "Cant make a Market order for " << options["trade-pair"]
+                         << ", side: " << options["side"] << ", type: " << options["type"]
+                         << ", because volume not given!" << endl;
+                    return false;
+                }
+
+                // for Market orders, price does not matter, so just
+                // set 0 price
+                options["price"]  = "0";
             }
         }
+
+
 
         if (options["command"] == "cancel_order")
         {

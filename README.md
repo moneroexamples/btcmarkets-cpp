@@ -127,3 +127,34 @@ Values in the example output were replaced with dummy values for privacy reasons
 
 [{"balance":1224253326293,"currency":"AUD","pendingFunds":66969936000},{"balance":0,"currency":"USD","pendingFunds":0},{"balance":7652697853,"currency":"BTC","pendingFunds":1378776555},{"balance":146034433752,"currency":"LTC","pendingFunds":3354855481197},{"balance":943372,"currency":"ETH","pendingFunds":4543243520},{"balance":0,"currency":"FCT","pendingFunds":0},{"balance":0,"currency":"MAID","pendingFunds":0},{"balance":1736535933,"currency":"DAO","pendingFunds":2066000000}]
 ```
+
+
+*Create order (authentication required)*
+
+Public `api_key` and secret `private_key` are required for functions dealing
+with your account. The keys are provided to you by btcmarkets
+in your [Account/API key](https://btcmarkets.net/account/apikey) section.
+
+A Bid(default) and Limit (default) order to buy 1 ETH for 18.17 AUD.
+
+```bash
+./btcmarketsexamples -a your_api_key -p your_private_key -c create_order -t ETH/AUD --price 19.17 --volume 1
+
+{"clientRequestId":"1","errorCode":null,"errorMessage":null,"id":102661890,"success":true}
+```
+
+An Ask and Limit (default) order to sell 1.5 ETH for 20.01 AUD.
+
+```bash
+./btcmarketsexamples -a your_api_key -p your_private_key -c create_order -t ETH/AUD --price 20.01 --volume 1.5 --side Ask
+
+{"clientRequestId":"1","errorCode":null,"errorMessage":null,"id":102662870,"success":true}
+```
+
+An Ask and Market order to buy 10 DAO using ETH.
+
+```bash
+./btcmarketsexamples -a your_api_key -p your_private_key -c create_order -t DAO/ETH --volume 10.0 --side Ask --type Market
+
+{"clientRequestId":"1","errorCode":null,"errorMessage":null,"id":102668298,"success":true}
+```

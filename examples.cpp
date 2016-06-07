@@ -37,32 +37,33 @@ int main(int acc, const char* avv[])
         btc_market = unique_ptr<btcm::BtcMarkets>(new  btcm::BtcMarkets);
     }
 
+
+
     nlohmann::json j;
 
-    if (!keys_provided)
+
+    // for order_book and tick, api_key and private key are not required
+
+    if (options["command"] == "tick")
     {
-        // for order_book and tick, api_key and private key are not required
-
-        if (options["command"] == "tick")
-        {
-            j = btc_market->tick(options["currency"],
-                                 options["instrument"]);
-        }
-
-        if (options["command"] == "order_book")
-        {
-            j = btc_market->order_book(options["currency"],
-                                       options["instrument"]);
-        }
-
-        if (options["command"] == "trades")
-        {
-            j = btc_market->trades(options["currency"],
-                                   options["instrument"],
-                                   options["since"]); /* since is trade id here */
-        }
+        j = btc_market->tick(options["currency"],
+                             options["instrument"]);
     }
-    else
+
+    if (options["command"] == "order_book")
+    {
+        j = btc_market->order_book(options["currency"],
+                                   options["instrument"]);
+    }
+
+    if (options["command"] == "trades")
+    {
+        j = btc_market->trades(options["currency"],
+                               options["instrument"],
+                               options["since"]); /* since is trade id here */
+    }
+
+    if (keys_provided)
     {
         // for these functions, api_key and private key are required
 

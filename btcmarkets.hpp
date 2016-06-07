@@ -432,13 +432,21 @@ public:
 
 
     json
-    trades(const string& currency, const string& instrument) const
+    trades(const string& currency,
+           const string& instrument,
+           const string& since_trade_id = "") const
     {
         if (!trading_pair_available(currency, instrument))
             return json {};
 
-        return order_book(currency, instrument,
-                          "/market/{inst}/{curr}/trades");
+        string path = "/market/{inst}/{curr}/trades";
+
+        if (!since_trade_id.empty())
+        {
+            path += "?since=" + since_trade_id;
+        }
+
+        return order_book(currency, instrument, path);
     }
 
 

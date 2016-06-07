@@ -54,6 +54,13 @@ int main(int acc, const char* avv[])
             j = btc_market->order_book(options["currency"],
                                        options["instrument"]);
         }
+
+        if (options["command"] == "trades")
+        {
+            j = btc_market->trades(options["currency"],
+                                   options["instrument"],
+                                   options["since"]); /* since is trade id here */
+        }
     }
     else
     {
@@ -81,12 +88,6 @@ int main(int acc, const char* avv[])
                                         options["instrument"],
                                         stoull(options["limit"]),
                                         stoull(options["since"]));
-        }
-
-        if (options["command"] == "trades")
-        {
-            j = btc_market->trades(options["currency"],
-                                   options["instrument"]);
         }
 
         if (options["command"] == "account_balance")
@@ -149,8 +150,8 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
 
     set<string> commands_requiring_auth {"order_history", "open_orders",
                                          "create_order", "cancel_order",
-                                         "trades", "order_detail",
-                                         "account_balance", "trade_history"};
+                                         "order_detail", "account_balance",
+                                         "trade_history"};
 
     po::options_description desc("btcmarketexamples - example program "
                                  "showcasing using BtcMarkets "
@@ -246,7 +247,7 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
     options["type"]  = vm["type"].as<string>();
 
     options["limit"]  = std::to_string(vm["limit"].as<uint64_t>());
-    options["since"]  = std::to_string(vm["limit"].as<uint64_t>());
+    options["since"]  = std::to_string(vm["since"].as<uint64_t>());
 
     if (commands_requiring_auth.find(options["command"]) != commands_requiring_auth.end())
     {

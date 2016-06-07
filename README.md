@@ -123,7 +123,7 @@ in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 Values in the example output were replaced with dummy values for privacy reasons.
 
 ```bash
-./btcmarketsexamples -a your_api_key -p your_private_key -c account_balance
+./btcmarketsexamples -a public_api_key -p secret_private_key -c account_balance
 
 [{"balance":1224253326293,"currency":"AUD","pendingFunds":66969936000},{"balance":0,"currency":"USD","pendingFunds":0},{"balance":7652697853,"currency":"BTC","pendingFunds":1378776555},{"balance":146034433752,"currency":"LTC","pendingFunds":3354855481197},{"balance":943372,"currency":"ETH","pendingFunds":4543243520},{"balance":0,"currency":"FCT","pendingFunds":0},{"balance":0,"currency":"MAID","pendingFunds":0},{"balance":1736535933,"currency":"DAO","pendingFunds":2066000000}]
 ```
@@ -137,7 +137,7 @@ in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 A Bid(default) and Limit (default) order to buy 1 ETH for 18.17 AUD.
 
 ```bash
-./btcmarketsexamples -a your_api_key -p your_private_key -c create_order -t ETH/AUD --price 19.17 --volume 1
+./btcmarketsexamples -a public_api_key -p secret_private_key -c create_order -t ETH/AUD --price 19.17 --volume 1
 
 {"clientRequestId":"1","errorCode":null,"errorMessage":null,"id":102661890,"success":true}
 ```
@@ -145,7 +145,7 @@ A Bid(default) and Limit (default) order to buy 1 ETH for 18.17 AUD.
 An Ask and Limit (default) order to sell 1.5 ETH for 20.01 AUD.
 
 ```bash
-./btcmarketsexamples -a your_api_key -p your_private_key -c create_order -t ETH/AUD --price 20.01 --volume 1.5 --side Ask
+./btcmarketsexamples -a public_api_key -p secret_private_key -c create_order -t ETH/AUD --price 20.01 --volume 1.5 --side Ask
 
 {"clientRequestId":"1","errorCode":null,"errorMessage":null,"id":102662870,"success":true}
 ```
@@ -153,7 +153,7 @@ An Ask and Limit (default) order to sell 1.5 ETH for 20.01 AUD.
 An Ask and Market order to sell 10 DAO using ETH.
 
 ```bash
-./btcmarketsexamples -a your_api_key -p your_private_key -c create_order -t DAO/ETH --volume 10.0 --side Ask --type Market
+./btcmarketsexamples -a public_api_key -p secret_private_key -c create_order -t DAO/ETH --volume 10.0 --side Ask --type Market
 
 {"clientRequestId":"1","errorCode":null,"errorMessage":null,"id":102668298,"success":true}
 ```
@@ -165,7 +165,7 @@ with your account. The keys are provided to you by btcmarkets
 in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 
 ```bash
-./btcmarketsexamples -a your_api_key -p your_private_key -c cancel_order --order-id 102662870
+./btcmarketsexamples -a public_api_key -p secret_private_key -c cancel_order --order-id 102662870
 
 {"errorCode":null,"errorMessage":null,"responses":[{"errorCode":null,"errorMessage":null,"id":102662870,"success":true}],"success":true}
 ```
@@ -177,7 +177,7 @@ with your account. The keys are provided to you by btcmarkets
 in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 
 ```bash
-./btcmarketsexamples -a your_api_key -p your_private_key -c order_detail --order-id 102510625
+./btcmarketsexamples -a public_api_key -p secret_private_key -c order_detail --order-id 102510625
 
 {"errorCode":null,"errorMessage":null,"orders":[{"clientRequestId":null,"creationTime":1465206394338,"currency":"BTC","errorMessage":null,"id":102510625,"instrument":"ETH","openVolume":100000000,"orderSide":"Bid","ordertype":"Limit","price":2241987,"status":"Placed","trades":[],"volume":100000000}],"success":true}
 ```

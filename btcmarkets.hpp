@@ -178,69 +178,10 @@ base64_decode(std::string const& encoded_string) {
 }
 
 
-// adapted from monero project:
-// https://github.com/monero-project/bitmonero
-bool
-parse_amount(const std::string& str_amount_,
-             uint64_t& amount,
-             size_t length = 8)
-{
-    std::string str_amount = str_amount_;
-
-    size_t point_index = str_amount.find_first_of('.');
-    size_t fraction_size;
-
-    if (std::string::npos != point_index)
-    {
-        fraction_size = str_amount.size() - point_index - 1;
-        while (length < fraction_size && '0' == str_amount.back())
-        {
-            str_amount.erase(str_amount.size() - 1, 1);
-            --fraction_size;
-        }
-
-        if (length < fraction_size)
-            return false;
-
-        str_amount.erase(point_index, 1);
-    }
-    else
-    {
-        fraction_size = 0;
-    }
-
-    if (str_amount.empty())
-        return false;
-
-    if (fraction_size < length)
-    {
-        str_amount.append(length - fraction_size, '0');
-    }
-
-    amount = stoull(str_amount);
-
-    return true;
-}
-
-uint64_t
-parse_amount(const std::string& str_amount_,
-             size_t length = 8)
-{
-    uint64_t v;
-    parse_amount(str_amount_, v, length);
-
-    return v;
-}
-
-
 inline uint64_t
 double_to_uint(double no, size_t precision = 2)
 {
-    stringstream ss;
-
-    ss << std::fixed << std::setprecision(precision) << no;
-
-    return parse_amount(ss.str());;
+    return static_cast<uint64_t >(no*1e8);
 }
 
 inline double

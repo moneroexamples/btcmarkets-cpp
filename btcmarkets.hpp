@@ -234,11 +234,11 @@ parse_amount(const std::string& str_amount_,
 
 
 inline uint64_t
-double_to_uint(double no, size_t precision = 4)
+double_to_uint(double no, size_t precision = 2)
 {
     stringstream ss;
 
-    ss << std::setprecision(precision) << no;
+    ss << std::fixed << std::setprecision(precision) << no;
 
     return parse_amount(ss.str());;
 }

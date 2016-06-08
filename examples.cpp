@@ -171,9 +171,9 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
             ("trade-pair,t", po::value<string>()->default_value("BTC/AUD"),
              "instrument/currency pair: BTC/AUD, LTC/AUD, ETH/AUD,"
              "LTC/BTC, ETH/BTC, DAO/BTC, DAO/ETH")
-            ("price", po::value<double>(),
+            ("price", po::value<string>(),
              "price when making an order")
-            ("volume", po::value<double>(),
+            ("volume", po::value<string>(),
              "volume of the order")
             ("side", po::value<string>()->default_value("Bid"),
              "side of order: Bid, Ask")
@@ -236,10 +236,10 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
     options["currency"]   = elems.at(1);
 
     if (vm.count("price"))
-        options["price"]  = std::to_string(vm["price"].as<double>());
+        options["price"]  = vm["price"].as<string>();
 
     if (vm.count("volume"))
-        options["volume"]  = std::to_string(vm["volume"].as<double>());
+        options["volume"]  = vm["volume"].as<string>();
 
     if (vm.count("order-id"))
         options["order_id"]  = std::to_string(vm["order-id"].as<uint64_t>());

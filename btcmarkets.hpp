@@ -179,9 +179,9 @@ base64_decode(std::string const& encoded_string) {
 
 
 inline uint64_t
-double_to_uint(double no, size_t precision = 2)
+double_to_uint(double no)
 {
-    return static_cast<uint64_t >(no*1e8);
+    return static_cast<uint64_t>(no * 1e8);
 }
 
 inline double
@@ -339,6 +339,8 @@ public:
                                + json_pair("ordertype"      , order_type, ",")
                                + json_pair("clientRequestId", client_request_id)
                                + "}";
+
+        cout << post_data << endl;
 
         cpr::Response response = post_request("/order/create", post_data);
 

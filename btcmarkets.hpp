@@ -400,7 +400,7 @@ public:
                                + json_pair("clientRequestId", client_request_id)
                                + "}";
 
-        cout << post_data << endl;
+        //cout << post_data << endl;
 
         cpr::Response response = post_request("/order/create", post_data);
 

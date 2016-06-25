@@ -38,7 +38,6 @@ int main(int acc, const char* avv[])
     }
 
 
-
     nlohmann::json j;
 
 

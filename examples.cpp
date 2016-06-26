@@ -18,6 +18,8 @@ int main(int acc, const char* avv[])
     if (!parse_options(acc, avv, options))
         return 1;
 
+    int64_t timestamp_offset {stoll(options["timestamp-offset"])};
+
     bool keys_provided {false};
 
     unique_ptr<btcm::BtcMarkets> btc_market;
@@ -27,14 +29,17 @@ int main(int acc, const char* avv[])
         btc_market = unique_ptr<btcm::BtcMarkets>(
                               new  btcm::BtcMarkets {
                                       options["api_key"],
-                                      options["private_key"]
+                                      options["private_key"],
+                                      timestamp_offset
                               });
 
         keys_provided = true;
     }
     else
     {
-        btc_market = unique_ptr<btcm::BtcMarkets>(new  btcm::BtcMarkets);
+        btc_market = unique_ptr<btcm::BtcMarkets>(
+                new  btcm::BtcMarkets(timestamp_offset)
+        );
     }
 
 
@@ -129,17 +134,18 @@ bool
 parse_options(int acc, const char *avv[], map<string, string>& options)
 {
 
-    options["api_key"]     = {};
-    options["private_key"] = {};
-    options["command"]     = {};
-    options["trade-pair"]  = {};
-    options["price"]       = {};
-    options["volume"]      = {};
-    options["side"]        = {};
-    options["order_id"]    = {};
-    options["type"]        = {};
-    options["limit"]       = {};
-    options["since"]       = {};
+    options["api_key"]          = {};
+    options["private_key"]      = {};
+    options["command"]          = {};
+    options["trade-pair"]       = {};
+    options["price"]            = {};
+    options["volume"]           = {};
+    options["side"]             = {};
+    options["order_id"]         = {};
+    options["type"]             = {};
+    options["limit"]            = {};
+    options["since"]            = {};
+    options["timestamp-offset"] = {};
 
 
     set<string> available_commands {"tick", "order_book",
@@ -181,9 +187,11 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
             ("limit", po::value<uint64_t>()->default_value(10),
              "number of past orders to fetch")
             ("since", po::value<uint64_t>()->default_value(0),
-             "from when to fetch the past orders.")
+             "from when to fetch the past orders")
+            ("timestamp-offset", po::value<int64_t>()->default_value(0),
+             "offset, in seconds, between your timezone and UTC+08:00")
             ("order-id", po::value<uint64_t>(),
-             "id number of an order to cancel or check details of");
+             "id number of an order to cancel or check details");
 
     po::variables_map vm;
     po::store(po::parse_command_line(acc, avv, desc), vm);
@@ -243,11 +251,14 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
     if (vm.count("order-id"))
         options["order_id"]  = std::to_string(vm["order-id"].as<uint64_t>());
 
-    options["side"]  = vm["side"].as<string>();
-    options["type"]  = vm["type"].as<string>();
+    options["side"] = vm["side"].as<string>();
+    options["type"] = vm["type"].as<string>();
 
-    options["limit"]  = std::to_string(vm["limit"].as<uint64_t>());
-    options["since"]  = std::to_string(vm["since"].as<uint64_t>());
+    options["limit"] = std::to_string(vm["limit"].as<uint64_t>());
+    options["since"] = std::to_string(vm["since"].as<uint64_t>());
+
+    options["timestamp-offset"] = std::to_string(
+            vm["timestamp-offset"].as<int64_t>());
 
     if (commands_requiring_auth.find(options["command"]) != commands_requiring_auth.end())
     {

@@ -305,15 +305,28 @@ class BtcMarkets
     // base64 decoded version of the private_key
     string decoded_private_key;
 
+    // btcmarkets requires correct timestamps which should be
+    // within +/- 30 seconds of the server timestamp
+    // Thus if you are in incorrect timezone, your timestamp will different
+    // from that of the server, which seem to be UTC+08:00
+    // (i.e., Australian Western Standard Time). This will result in error.
+    // If you are using different timezone you can set this timestamp offset
+    // variable to account for differences in timezones in seconds
+    int64_t timestamp_offset {0}; // offset in seconds
+
 public:
 
 
-    BtcMarkets() : api_key {}, private_key {}
+    BtcMarkets(int64_t _timestamp_offset = 0)
+            : timestamp_offset {_timestamp_offset},
+              api_key {}, private_key {}
     {
     }
 
-    BtcMarkets(string _api_key, string _private_key)
-        : api_key {_api_key}, private_key {_private_key}
+    BtcMarkets(string _api_key, string _private_key,
+               int64_t _timestamp_offset = 0)
+        : api_key {_api_key}, private_key {_private_key},
+          timestamp_offset {_timestamp_offset}
     {
         decoded_private_key = base64_decode(private_key);
     }
@@ -690,7 +703,10 @@ private:
     uint64_t
     get_timestamp() const
     {
-        return current_timestamp<std::chrono::milliseconds>();
+        int64_t timestamp_offset_ms {timestamp_offset * 1000};
+
+        return current_timestamp<std::chrono::milliseconds>()
+               + timestamp_offset_ms;
     }
 
 };

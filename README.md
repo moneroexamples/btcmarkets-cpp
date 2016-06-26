@@ -12,6 +12,14 @@ For most commands, public `api_key` and secret `private_key` are required
 for authentication for your account. The keys are provided to you by btcmarkets
 in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 
+BTCMarkets requires correct timestamps to be added to authentication
+requests. This timestamp should be within +/- 30 seconds of their server timestamp.
+They don't specify exactly what timestamp they use, but from my tests it seems
+that it is calculated based on UTC+08:00 (i.e., Australian Western Standard Time).
+Thus if you are in different timezone, your timestamp may be different 
+from that of the btcmarkets server. This may result in failures of 
+authentication requests.
+
 ### Dependencies 
 
 ##### Ubuntu 15.10 and 16.04
@@ -60,9 +68,11 @@ btcmarketexamples - example program showcasing using BtcMarkets C++11 RESTfull A
   --side arg (=Bid)                  side of order: Bid, Ask
   --type arg (=Limit)                type of the order: Market, Limit
   --limit arg (=10)                  number of past orders to fetch
-  --since arg (=0)                   from when to fetch the past orders
+  --since arg (=0)                   from when to fetch the past orders.
+  --timestamp-offset arg (=0)        offset, in seconds, between your timezone 
+                                     and UTC+08:00.
   --order-id arg                     id number of an order to cancel or check 
-                                     details of
+                                     details
 ```
 
 ### Examples

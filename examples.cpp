@@ -189,7 +189,7 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
             ("since", po::value<uint64_t>()->default_value(0),
              "from when to fetch the past orders")
             ("timestamp-offset", po::value<int64_t>()->default_value(0),
-             "offset, in seconds, between your timezone and UTC+08:00")
+             "offset, in seconds, between your and btcmarkerts timestamps")
             ("order-id", po::value<uint64_t>(),
              "id number of an order to cancel or check details");
 

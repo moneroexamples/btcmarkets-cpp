@@ -66,9 +66,9 @@ btcmarketexamples - example program showcasing using BtcMarkets C++11 RESTfull A
   --side arg (=Bid)                  side of order: Bid, Ask
   --type arg (=Limit)                type of the order: Market, Limit
   --limit arg (=10)                  number of past orders to fetch
-  --since arg (=0)                   from when to fetch the past orders.
-  --timestamp-offset arg (=0)        offset, in seconds, between your timezone 
-                                     and UTC+08:00.
+  --since arg (=0)                   from when to fetch the past orders
+  --timestamp-offset arg (=0)        offset, in seconds, between your and 
+                                     btcmarkerts timestamps
   --order-id arg                     id number of an order to cancel or check 
                                      details
 ```

@@ -14,11 +14,9 @@ in your [Account/API key](https://btcmarkets.net/account/apikey) section.
 
 BTCMarkets requires correct timestamps to be added to authentication
 requests. This timestamp should be within +/- 30 seconds of their server timestamp.
-They don't specify exactly what timestamp they use, but from my tests it seems
-that it is calculated based on UTC+08:00 (i.e., Australian Western Standard Time).
-Thus if you are in different timezone, your timestamp may be different 
-from that of the btcmarkets server. This may result in failures of 
-authentication requests.
+In Linux this shouldn't be a problem. But just in case, the library has
+an option to specify timezone-offset, in seconds, if timestamp adjustments
+are required due to differences in your and the server timestamps.
 
 ### Dependencies 
 

@@ -308,10 +308,9 @@ class BtcMarkets
     // btcmarkets requires correct timestamps which should be
     // within +/- 30 seconds of the server timestamp
     // Thus if you are in incorrect timezone, your timestamp will different
-    // from that of the server, which seem to be UTC+08:00
-    // (i.e., Australian Western Standard Time). This will result in error.
+    // from the timestamp of the server, and an error will occure.
     // If you are using different timezone you can set this timestamp offset
-    // variable to account for differences in timezones in seconds
+    // variable to account for differences in timezones in seconds.
     int64_t timestamp_offset {0}; // offset in seconds
 
 public:

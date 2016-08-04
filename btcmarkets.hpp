@@ -295,7 +295,8 @@ class BtcMarkets
     string base_url {"https://api.btcmarkets.net"};
 
     // available trading paris: instrument/currency
-    vector<string> trading_pairs {"BTC/AUD", "LTC/AUD", "ETH/AUD",
+    vector<string> trading_pairs {"BTC/AUD", "LTC/AUD", "ETH/AUD", 
+    							  "ETC/AUD", "ETC/BTC", 	
                                   "LTC/BTC", "ETH/BTC", "DAO/BTC",
                                   "DAO/ETH"};
 

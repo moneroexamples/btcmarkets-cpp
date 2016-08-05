@@ -174,8 +174,8 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
                      "open_orders, create_order, cancel_order, trades, "
                      "order_detail, account_balance")
             ("trade-pair,t", po::value<string>()->default_value("BTC/AUD"),
-             "instrument/currency pair: BTC/AUD, LTC/AUD, ETH/AUD,"
-             "LTC/BTC, ETH/BTC, DAO/BTC, DAO/ETH")
+             "instrument/currency pair: BTC/AUD, LTC/AUD, ETH/AUD, ETC/AUD"
+             "LTC/BTC, ETH/BTC, ETC/BTC, DAO/BTC, DAO/ETH")
             ("price", po::value<string>(),
              "price when making an order")
             ("volume", po::value<string>(),

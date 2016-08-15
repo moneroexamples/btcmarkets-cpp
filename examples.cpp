@@ -18,6 +18,7 @@ int main(int acc, const char* avv[])
     if (!parse_options(acc, avv, options))
         return 1;
 
+    int32_t request_timeout  {stoi(options["timeout"])};
     int64_t timestamp_offset {stoll(options["timestamp-offset"])};
 
     bool keys_provided {false};
@@ -30,6 +31,7 @@ int main(int acc, const char* avv[])
                               new  btcm::BtcMarkets {
                                       options["api_key"],
                                       options["private_key"],
+                                      request_timeout,
                                       timestamp_offset
                               });
 
@@ -38,7 +40,8 @@ int main(int acc, const char* avv[])
     else
     {
         btc_market = unique_ptr<btcm::BtcMarkets>(
-                new  btcm::BtcMarkets(timestamp_offset)
+                new  btcm::BtcMarkets(request_timeout,
+                                      timestamp_offset)
         );
     }
 
@@ -188,6 +191,8 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
              "number of past orders to fetch")
             ("since", po::value<uint64_t>()->default_value(0),
              "from when to fetch the past orders")
+            ("timeout", po::value<int32_t>()->default_value(5000),
+             "request timeout, in milliseconds")
             ("timestamp-offset", po::value<int64_t>()->default_value(0),
              "offset, in seconds, between your and btcmarkerts timestamps")
             ("order-id", po::value<uint64_t>(),
@@ -259,6 +264,9 @@ parse_options(int acc, const char *avv[], map<string, string>& options)
 
     options["timestamp-offset"] = std::to_string(
             vm["timestamp-offset"].as<int64_t>());
+
+    options["timeout"] = std::to_string(
+            vm["timeout"].as<int32_t>());
 
     if (commands_requiring_auth.find(options["command"]) != commands_requiring_auth.end())
     {

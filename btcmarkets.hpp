@@ -314,18 +314,27 @@ class BtcMarkets
     // variable to account for differences in timezones in seconds.
     int64_t timestamp_offset {0}; // offset in seconds
 
+    int32_t request_timeout {1000}; // timeout in milliseconds
+
 public:
 
 
-    BtcMarkets(int64_t _timestamp_offset = 0)
-            : timestamp_offset {_timestamp_offset},
-              api_key {}, private_key {}
+    BtcMarkets(int32_t _request_timeout = 1000,
+               int64_t _timestamp_offset = 0)
+            : request_timeout {_request_timeout},
+              timestamp_offset {_timestamp_offset},
+              api_key {},
+              private_key {}
     {
     }
 
-    BtcMarkets(string _api_key, string _private_key,
+    BtcMarkets(string _api_key,
+               string _private_key,
+               int32_t _request_timeout = 1000,
                int64_t _timestamp_offset = 0)
-        : api_key {_api_key}, private_key {_private_key},
+        : api_key {_api_key},
+          private_key {_private_key},
+          request_timeout {_request_timeout},
           timestamp_offset {_timestamp_offset}
     {
         decoded_private_key = base64_decode(private_key);
@@ -604,7 +613,8 @@ private:
 
         cpr::Response response = cpr::Post(cpr::Url{base_url + path},
                                            header,
-                                           cpr::Body{post_data});
+                                           cpr::Body{post_data},
+                                           cpr::Timeout{request_timeout});
 
         if (response.status_code != 200)
         {
@@ -621,7 +631,8 @@ private:
         cpr::Header header = construct_header(path, "");
 
         cpr::Response response = cpr::Get(cpr::Url{base_url + path},
-                                          header);
+                                          header,
+                                          cpr::Timeout{request_timeout});
 
         if (response.status_code != 200)
         {
